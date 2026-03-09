@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Puppy Trading System</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background-color: #f4f4f9; }
+        nav { background-color: #4a90e2; color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        nav a { color: white; text-decoration: none; margin-left: 20px; font-weight: bold; font-size: 1.1em; }
+        nav a:hover { text-decoration: underline; }
+        .container { max-width: 1000px; margin: 30px auto; padding: 20px; }
+        
+        /* Puppy Card Grid */
+        .puppy-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .puppy-card { background: white; border-radius: 10px; padding: 0; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: transform 0.2s; display: flex; flex-direction: column; }
+        .puppy-card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        
+        /* Image Styling */
+        .puppy-img { width: 100%; height: 200px; object-fit: cover; background-color: #eee; }
+        
+        .card-body { padding: 20px; }
+        .puppy-card h3 { margin-top: 0; color: #333; font-size: 1.4em; }
+        .price { color: #27ae60; font-weight: bold; font-size: 1.3em; margin: 10px 0; }
+        .btn { display: inline-block; padding: 10px 20px; background-color: #4a90e2; color: white; text-decoration: none; border-radius: 5px; border: none; cursor: pointer; font-size: 1em; text-align: center; margin-top: 10px; }
+        .btn:hover { background-color: #357abd; }
+        
+        .alert { padding: 15px; background-color: #ffcccc; color: #d8000c; margin-bottom: 20px; border-radius: 5px; border: 1px solid #d8000c; }
+        .empty-msg { text-align: center; color: #777; font-style: italic; margin-top: 50px; }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav>
+        <div style="font-size: 1.5em; font-weight: bold;">🐕 PuppyShop</div>
+        <div>
+            <a href="/">Home</a>
+            {% if current_user.is_authenticated %}
+                {% if current_user.role == 'seller' %}
+                    <a href="/add_puppy">Add Puppy</a>
+                {% endif %}
+                <a href="/logout">Logout ({{ current_user.username }})</a>
+            {% else %}
+                <a href="/login">Login</a>
+                <a href="/register">Register</a>
+            {% endif %}
+        </div>
+    </nav>
+    
+    <div class="container">
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <h2 style="text-align:center; margin-bottom: 30px; color: #333;">Available Puppies for Sale</h2>
+        
+        <div class="puppy-grid">
+            {% for puppy in puppies %}
+            <div class="puppy-card">
+                <!-- Image Logic -->
+                {% if puppy.image_filename %}
+                    <img src="/static/uploads/{{ puppy.image_filename }}" alt="{{ puppy.name }}" class="puppy-img">
+                {% else %}
+                    <!-- Fallback Image if none uploaded -->
+                    <img src="https://via.placeholder.com/300x200?text=No+Image" alt="No Image" class="puppy-img">
+                {% endif %}
+                
+                <div class="card-body">
+                    <h3>{{ puppy.name }}</h3>
+                    <p style="color: #666; margin: 5px 0;"><strong>Breed:</strong> {{ puppy.breed }}</p>
+                    <p class="price">Rs{{ puppy.price }}</p>
+                    
+                    {% if current_user.is_authenticated %}
+                        <a href="/buy/{{ puppy.id }}" class="btn" style="display:block; width: 100%;">Buy Now</a>
+                    {% else %}
+                        <p style="margin-top: 15px; text-align: center;"><small><a href="/login" style="color: #4a90e2;">Login</a> to purchase</small></p>
+                    {% endif %}
+                </div>
+            </div>
+            {% else %}
+            <div class="empty-msg">
+                <p>No puppies available. Sellers, please add some!</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+</body>
+</html>

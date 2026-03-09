@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Payment Bill</title>
+    <style>
+        body { font-family: sans-serif; background: #e0f7fa; text-align: center; padding: 50px; }
+        .bill { background: white; padding: 40px; border-radius: 10px; display: inline-block; box-shadow: 0 5px 15px rgba(0,0,0,0.1); max-width: 400px; }
+        .qr { margin: 20px 0; background: #f9f9f9; padding: 15px; display: inline-block; border-radius: 5px; }
+        h2 { color: #27ae60; }
+    </style>
+</head>
+<body>
+    <div class="bill">
+        <h2>Payment Successful! 🎉</h2>
+        <p>Thank you for adopting {{ puppy.name }}.</p>
+        
+        <div style="text-align: left; border-top: 1px dashed #ccc; margin-top: 20px; padding-top: 20px;">
+            <p><strong>Transaction ID:</strong><br>{{ transaction_id }}</p>
+            <p><strong>Date:</strong><br>{{ date }}</p>
+            <p><strong>Amount Paid:</strong><br><span style="color:#27ae60; font-size: 1.2em;">Rs{{ puppy.price }}</span></p>
+        </div>
+        
+        <div class="qr">
+            <!-- Dynamic QR Code Generator -->
+            {% set qr_data = "Puppy:" ~ puppy.name ~ "|ID:" ~ transaction_id %}
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{ qr_data }}" alt="QR Code">
+            <p><small>Scan to verify</small></p>
+        </div>
+        
+        <div style="margin-top: 20px;">
+            <a href="/" class="btn" style="background: #4a90e2; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Back to Home</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Buy Puppy</title>
+    <style>
+        body { font-family: sans-serif; background: #f4f4f9; text-align: center; padding: 50px; }
+        .card { background: white; display: inline-block; padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); text-align: left; }
+        .price { color: #27ae60; font-size: 1.5em; font-weight: bold; }
+        .btn { background: #27ae60; color: white; padding: 15px 30px; text-decoration: none; border: none; border-radius: 5px; cursor: pointer; font-size: 1.1em; }
+    </style>
+</head>
+<body>
+    <h1>Confirm Your Purchase</h1>
+    <div class="card">
+        <h2>{{ puppy.name }}</h2>
+        <p>Breed: {{ puppy.breed }}</p>
+        <p class="price">Total: Rs{{ puppy.price }}</p>
+    </div>
+    
+    <div style="margin-top: 30px;">
+        <form action="/pay/{{ puppy.id }}" method="POST">
+            <p>Click below to simulate payment.</p>
+            <button type="submit" class="btn">Pay Now</button>
+        </form>
+    </div>
+</body>
+</html>
